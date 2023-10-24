@@ -1,113 +1,198 @@
-import Image from 'next/image'
+"use client"
+import Image from "next/image"
+import Link from "next/link"
+import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa"
+import { useMoralis, useWeb3Contract } from "react-moralis"
+import { contractAddresses, whitelistAbi, nftAbi } from "@/constants"
+import { useState, useEffect } from "react"
+import { ethers } from "ethers"
+import { useNotification } from "@web3uikit/core"
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    const images = ["/duck-8.svg", "/duck-15.svg", "/duck-17.svg"]
+    const [amtMinted, setAmtMinted] = useState("0")
+    const [maxNumberOfTokens, setMaxNumberOfTokens] = useState("0")
+    const [uiPrice, setUiPrice] = useState("0")
+    const [isAddyWhitelisted, setIsAddyWhitelisted] = useState(null)
+    const { isWeb3Enabled, chainId: chainIdhex, account } = useMoralis()
+    const chainId = parseInt(chainIdhex)
+    const dispatch = useNotification()
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+    const contractAddress =
+        chainId in contractAddresses ? contractAddresses[chainId]["Nft"][0] : null
+    const whitelistContractAddress =
+        chainId in contractAddresses ? contractAddresses[chainId]["Whitelist"][0] : null
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+    const {
+        runContractFunction: getMaxNumberOfTokens,
+        isFetching: isFetchingMaxNumberOfTokens,
+        isLoading: isLoadingMaxNumberOfTokens,
+    } = useWeb3Contract({
+        abi: nftAbi,
+        contractAddress: contractAddress,
+        functionName: "getMaxNumberOfTokens",
+        params: {},
+    })
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+    const {
+        runContractFunction: totalSupply,
+        isFetching: isFetchingTotalSupply,
+        isLoading: isLoadingTotalSupply,
+    } = useWeb3Contract({
+        abi: nftAbi,
+        contractAddress: contractAddress,
+        functionName: "totalSupply",
+        params: {},
+    })
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
+    const { runContractFunction: getPrice } = useWeb3Contract({
+        abi: nftAbi,
+        contractAddress: contractAddress,
+        functionName: "getPrice",
+        params: {},
+    })
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    const {
+        runContractFunction: isAddressWhitelisted,
+        isFetching: isFetchingIfAddressIsWhitelisted,
+        isLoading: isLoadingIfAddressIsWhitelisted,
+    } = useWeb3Contract({
+        abi: whitelistAbi,
+        contractAddress: whitelistContractAddress,
+        functionName: "isAddressWhitelisted",
+        params: {
+            _address: account,
+        },
+    })
+
+    const {
+        runContractFunction: mint,
+        isFetching: isFetchingMint,
+        isLoading: isLoadingMint,
+    } = useWeb3Contract({
+        abi: nftAbi,
+        contractAddress: contractAddress,
+        functionName: "mint",
+        params: {
+            _address: account,
+        },
+        msgValue: isAddyWhitelisted ? "0" : uiPrice,
+    })
+
+    const handleMintSuccess = async (tx) => {
+        try {
+            await tx.wait(1)
+            updateUI()
+            dispatch({
+                type: "success",
+                message: "Minted successfully",
+                title: "Mint Notification",
+                position: "topR",
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        if (isWeb3Enabled) {
+            updateUI()
+        }
+    }, [isWeb3Enabled])
+
+    const updateUI = async () => {
+        const totalSupplyFromCall = (await totalSupply()).toString()
+        const maxNumberOfTokensFromCall = (await getMaxNumberOfTokens()).toString()
+        const priceFromCall = (await getPrice()).toString()
+        const isAddressWhitelistedFromCall = await isAddressWhitelisted()
+        setAmtMinted(totalSupplyFromCall)
+        setMaxNumberOfTokens(maxNumberOfTokensFromCall)
+        setUiPrice(priceFromCall)
+        setIsAddyWhitelisted(isAddressWhitelistedFromCall)
+    }
+
+    return (
+        <main className="pt-4">
+            <div className="container mx-auto flex flex-col space-y-8">
+                <h1 className="sm:text-8xl text-6xl text-center">
+                    DU<span className="text-red-700">R</span>KI
+                    <span className="text-sky-600">O</span>S
+                </h1>
+                <section className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 px-5 sm:px-0">
+                    <div className="flex flex-col space-y-1 md:max-w-[50%]">
+                        <h2 className="capitalize font-bold text-2xl text-stone-400">
+                            every Durk is unique!
+                        </h2>
+                        <p className="tracking-widest sm:tracking-tighter text-stone-300 sm:test-sm">
+                            The Durkios are 20 uniquely generated characters built and developed on
+                            the Ethereum blockchain. Each Duck is different and can be owned by a
+                            single person. Mint your Ducks for just 0.01 ETH, or apply for whitelist
+                            in order to be eligible to mint for free. Early minters will have the
+                            chance to win free Durk Nft airdrops and take part in upcoming
+                            giveaways, as well as get the chance to win whitelists from collab
+                            projects in the future. Don't miss out!!!
+                        </p>
+                    </div>
+
+                    <div className="rounded-lg items-center bg-white text-sky-700 font-bold md:w-1/2 w-[75%] mx-auto flex flex-col p-6 space-y-4">
+                        <h2 className="text-2xl">
+                            {amtMinted}/{maxNumberOfTokens} minted
+                        </h2>
+                        <h2 className="">
+                            1 DCK = {ethers.utils.formatUnits(uiPrice, "ether")} ETH
+                        </h2>
+
+                        <button
+                            onClick={async () =>
+                                await mint({
+                                    onError: (error) => console.log(error),
+                                    onSuccess: handleMintSuccess,
+                                })
+                            }
+                            className="bg-red-600 py-3 disabled:bg-red-400 uppercase rounded-xl flex justify-center items-center text-white tracking-widest w-full shadow-md hover:shadow-sky-800"
+                            disabled={isFetchingMint || isLoadingMint}
+                        >
+                            {isFetchingMint || isLoadingMint ? (
+                                <div className="spinner-border animate-spin h-8 w-8 border-b-2 rounded-full"></div>
+                            ) : (
+                                "mint"
+                            )}
+                        </button>
+                    </div>
+                </section>
+
+                <div className="flex flex-col justify-center items-center sm:space-x-6 space-y-3 sm:max-w-full sm:space-y-0 sm:flex-row">
+                    {images.map((image, index) => (
+                        <Image alt={"Durkio"} key={index} src={image} width={200} height={200} />
+                    ))}
+                </div>
+
+                <div className="flex items-center justify-between container mx-auto text-3xl">
+                    <div className="flex items-center space-x-6">
+                        <Link href="www.github.com/Adelani10" className="hover:text-sky-600">
+                            <FaGithub />
+                        </Link>
+
+                        <Link href="www.twitter.com/laniplaydirty" className="hover:text-sky-600">
+                            <FaTwitter />
+                        </Link>
+
+                        <Link href="www.twitter.com/laniplaydirty" className="hover:text-sky-600">
+                            <FaLinkedin />
+                        </Link>
+                    </div>
+
+                    <div>
+                        <Link
+                            href="https://sepolia.etherscan.io/address/0xe0E8CA6553C3079e2027103552e07B3d203DC21C"
+                            className="contract underline hover:text-sky-600"
+                            target="_blank"
+                        >
+                            Contract
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </main>
+    )
 }
