@@ -4,17 +4,20 @@ import Link from "next/link"
 import { GrTextAlignCenter } from "react-icons/gr"
 import { ImRoad } from "react-icons/im"
 import { AiOutlineShoppingCart } from "react-icons/ai"
+import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io"
 import { BsImages } from "react-icons/bs"
 import { ConnectButton } from "@web3uikit/web3"
-import { Modal, useNotification, Input } from "@web3uikit/core"
+import { Modal, useNotification, Input, Dropdown } from "@web3uikit/core"
 import { useState } from "react"
 import { whitelistAbi, contractAddresses } from "@/constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 
 export default function Header() {
     const [showModal, setShowModal] = useState(false)
+    const [dropDown, setDropDown] = useState(false)
     const [address, setAddress] = useState("0x00000000")
-    const { isWeb3Enabled, chainId: chainIdhex, account } = useMoralis()
+    const [addWhitelistModal, setAddWhitelistModal] = useState(false)
+    const { chainId: chainIdhex, account } = useMoralis()
     const chainId = parseInt(chainIdhex)
     const dispatch = useNotification()
 
@@ -29,10 +32,25 @@ export default function Header() {
         setShowModal(true)
     }
 
+
+    console.log(dropDown)
     const {
         runContractFunction: addWhitelist,
-        isFetching: isFetchingAddingwhitlist,
+        isFetching: isFetchingAddingwhitelist,
         isLoading: isLoadingAddingWhitelist,
+    } = useWeb3Contract({
+        abi: whitelistAbi,
+        contractAddress: contractAddress,
+        functionName: "removeWhitelist",
+        params: {
+            _address: address,
+        },
+    })
+
+    const {
+        runContractFunction: removeWhitelist,
+        isFetching: isFetchingRemovingingwhitelist,
+        isLoading: isLoadingRemovingingWhitelist,
     } = useWeb3Contract({
         abi: whitelistAbi,
         contractAddress: contractAddress,
@@ -57,14 +75,72 @@ export default function Header() {
         }
     }
 
+    const handleRemovalSuccess = async (tx) => {
+        try {
+            await tx.wait(1)
+            dispatch({
+                type: "success",
+                message: "Removed Whitelist",
+                title: "WL Removal",
+                position: "topR",
+            })
+            handleModalFalse()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const returnModal = (confirmText, func, title) => {
+        return (
+            <Modal
+                cancelText="Cancel"
+                id="regular"
+                isVisible={showModal}
+                okText={confirmText}
+                onCancel={handleModalFalse}
+                onCloseButtonPressed={handleModalFalse}
+                onOk={func}
+                title={title}
+            >
+                <Input
+                    label="Address"
+                    width="100%"
+                    onChange={(event) => setAddress(event.target.value)}
+                />
+            </Modal>
+        )
+    }
+
     return (
         <nav className="py-8 border-b">
+            {addWhitelistModal
+                ? returnModal(
+                      "Whitelist",
+                      async () => {
+                          await addWhitelist({
+                              onSuccess: handleWhitelistingSuccess,
+                              onError: (error) => console.log(error),
+                          })
+                      },
+                      "Add Whitelist",
+                  )
+                : returnModal(
+                      "Remove Whitelist",
+                      async () => {
+                          await removeWhitelist({
+                              onSuccess: handleRemovalSuccess,
+                              onError: (error) => console.log(error),
+                          })
+                      },
+                      "Remove Whitelist",
+                  )}
+
             <div className=" container mx-auto flex justify-between pl-5 md:pl-0 items-center">
-                <button className="md:hidden text-2xl">
+                <button className="lg:hidden text-2xl">
                     <GrTextAlignCenter />
                 </button>
 
-                <div className="md:flex hidden items-center space-x-3 lg:space-x-8 sm:space-x-5">
+                <div className="lg:flex hidden items-center space-x-3 lg:space-x-8 sm:space-x-5">
                     <Link href="/marketplace" className="flex space-x-1 item-center">
                         <AiOutlineShoppingCart />
                         <h3>Marketplace</h3>
@@ -80,41 +156,61 @@ export default function Header() {
                 </div>
 
                 <div className=" ">
-                    <Modal
-                        cancelText="Cancel"
-                        id="regular"
-                        isVisible={showModal}
-                        okText="Whitelist"
-                        onCancel={handleModalFalse}
-                        onCloseButtonPressed={handleModalFalse}
-                        onOk={async () => {
-                            await addWhitelist({
-                                onSuccess: handleWhitelistingSuccess,
-                                onError: (error) => {
-                                    dispatch({
-                                        type: "error",
-                                        message: "Tx Failed!",
-                                        title: "Tx Error",
-                                        position: "topR",
-                                    })
-                                    console.log(error)
-                                }
-                            })
-                        }}
-                        title="Add To Whitelist"
-                    >
-                        <Input
-                            label="Address"
-                            width="100%"
-                            onChange={(event) => setAddress(event.target.value)}
-                        />
-                    </Modal>
-                    <button
-                        onClick={() => handleModalTrue()}
-                        className="bg-sky-800 md:px-4 rounded-lg p-2"
-                    >
-                        Add WL!!
-                    </button>
+                    <div className="relative lg:hidden hover:scale-125">
+                        <button
+                            onClick={() => setDropDown(!dropDown)}
+                            className="flex text-lg space-x-1 bg-sky-800 md:px-4 rounded-lg p-2 items-center justify-center"
+                        >
+                            <h3>Whitelist</h3>
+                            {!dropDown ? <IoIosArrowDropdown /> : <IoIosArrowDropup />}
+                        </button>
+                        {dropDown && (
+                            <div className="bg-white rounded-md flex -translate-x-[22%] md:-translate-x-[19%] border text-sky-800 flex-col absolute p-2 min-w-[200px]">
+                                <button
+                                    onClick={() => {
+                                        setDropDown(false)
+                                        setAddWhitelistModal(true)
+                                        handleModalTrue()
+                                    }}
+                                    className="hover:bg-stone-200 md:px-4 rounded-lg p-2"
+                                >
+                                    Add WL!! 🫡
+                                </button>
+
+                                <button
+                                    onClick={() => {
+                                        setDropDown(false)
+                                        setAddWhitelistModal(false)
+                                        handleModalTrue()
+                                    }}
+                                    className=" md:px-4 hover:bg-stone-200 rounded-lg p-2"
+                                >
+                                    Remove WL!! 😡
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="lg:flex hidden text-lg space-x-2 xl:space-x-8">
+                        <button
+                            onClick={() => {
+                                setAddWhitelistModal(true)
+                                handleModalTrue()
+                            }}
+                            className=" bg-sky-800 w-48 rounded-lg py-2"
+                        >
+                            Add WL!! 🫡
+                        </button>
+                        <button
+                            onClick={() => {
+                                setAddWhitelistModal(false)
+                                handleModalTrue()
+                            }}
+                            className=" bg-sky-800 w-48 rounded-lg py-2"
+                        >
+                            Remove WL!! 😡
+                        </button>
+                    </div>
                 </div>
 
                 <div className="">

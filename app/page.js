@@ -119,7 +119,7 @@ export default function Home() {
                     <span className="text-sky-600">O</span>S
                 </h1>
                 <section className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 px-5 sm:px-0">
-                    <div className="flex flex-col space-y-1 md:max-w-[50%]">
+                    <div className="flex flex-col space-y-1 sm:max-w-[50%]">
                         <h2 className="capitalize font-bold text-2xl text-stone-400">
                             every Durk is unique!
                         </h2>
