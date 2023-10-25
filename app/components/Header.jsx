@@ -8,9 +8,10 @@ import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io"
 import { BsImages } from "react-icons/bs"
 import { ConnectButton } from "@web3uikit/web3"
 import { Modal, useNotification, Input, Dropdown } from "@web3uikit/core"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { whitelistAbi, contractAddresses } from "@/constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
+import { appContext } from "./context"
 
 export default function Header() {
     const [showModal, setShowModal] = useState(false)
@@ -20,6 +21,9 @@ export default function Header() {
     const { chainId: chainIdhex, account } = useMoralis()
     const chainId = parseInt(chainIdhex)
     const dispatch = useNotification()
+
+    const {toggleSideBar} = useContext(appContext)
+
 
     const contractAddress =
         chainId in contractAddresses ? contractAddresses[chainId]["Whitelist"][0] : null
@@ -32,8 +36,6 @@ export default function Header() {
         setShowModal(true)
     }
 
-
-    console.log(dropDown)
     const {
         runContractFunction: addWhitelist,
         isFetching: isFetchingAddingwhitelist,
@@ -136,7 +138,7 @@ export default function Header() {
                   )}
 
             <div className=" container mx-auto flex justify-between pl-5 md:pl-0 items-center">
-                <button className="lg:hidden text-2xl">
+                <button onClick={() => toggleSideBar()} className="lg:hidden text-2xl">
                     <GrTextAlignCenter />
                 </button>
 

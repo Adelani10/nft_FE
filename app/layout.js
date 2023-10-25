@@ -3,6 +3,8 @@ import "./globals.css"
 import Header from "./components/Header"
 import { MoralisProvider } from "./components/useClient"
 import { NotificationProvider } from "./components/useClient"
+import SideBar from "./components/SideBar"
+import {Context} from "./components/context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -15,12 +17,15 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body className={`${inter.className}`}>
-                <MoralisProvider initializeOnMount={false}>
-                    <NotificationProvider>
-                        <Header />
-                        {children}
-                    </NotificationProvider>
-                </MoralisProvider>
+                <Context>
+                    <MoralisProvider initializeOnMount={false}>
+                        <NotificationProvider>
+                            <SideBar />
+                            <Header />
+                            {children}
+                        </NotificationProvider>
+                    </MoralisProvider>
+                </Context>
             </body>
         </html>
     )
