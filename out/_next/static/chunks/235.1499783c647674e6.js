@@ -1,0 +1,27 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[235],{235:function(o,c,n){n.r(c),n.d(c,{default:function(){return ButtonOutline}});var r=n(64580);n(2265),n(33700);let e=(0,r.s)(r.B)`
+    background-color: ${r.c.white};
+    border-color: ${r.c.navy20};
+    color: ${r.c.navy40};
+
+    :hover {
+        background-color: ${r.b.beauBlue};
+        border-color: transparent;
+        color: ${r.c.navy40};
+
+        svg {
+            color: ${r.c.navy40};
+        }
+    }
+
+    :active {
+        box-shadow: 0px 0px 0px 2px ${r.c.blue70};
+    }
+
+    :focus {
+        box-shadow: 0px 0px 0px 2px ${r.c.navy30};
+    }
+
+    svg {
+        color: ${r.c.navy40};
+    }
+`,{ButtonOutlineStyled:t}={ButtonOutlineStyled:e},ButtonOutline=({...o})=>(0,r.a)(t,{...o})}}]);
