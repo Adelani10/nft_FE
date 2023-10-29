@@ -3,10 +3,12 @@ import Image from "next/image"
 import Link from "next/link"
 import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa"
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { contractAddresses, whitelistAbi, nftAbi } from "@/constants"
+import { whitelistAbi, nftAbi } from "@/constants"
 import { useState, useEffect } from "react"
 import { ethers } from "ethers"
 import { useNotification } from "@web3uikit/core"
+import { useContext } from "react"
+import { appContext } from "@/context"
 
 export default function Home() {
     const images = ["/duck-8.svg", "/duck-15.svg", "/duck-17.svg"]
@@ -14,14 +16,10 @@ export default function Home() {
     const [maxNumberOfTokens, setMaxNumberOfTokens] = useState("0")
     const [uiPrice, setUiPrice] = useState("0")
     const [isAddyWhitelisted, setIsAddyWhitelisted] = useState(null)
-    const { isWeb3Enabled, chainId: chainIdhex, account } = useMoralis()
-    const chainId = parseInt(chainIdhex)
     const dispatch = useNotification()
 
-    const contractAddress =
-        chainId in contractAddresses ? contractAddresses[chainId]["Nft"][0] : null
-    const whitelistContractAddress =
-        chainId in contractAddresses ? contractAddresses[chainId]["Whitelist"][0] : null
+    const { nftContractAddress, whitelistContractAddress, isWeb3Enabled, account } =
+        useContext(appContext)
 
     const {
         runContractFunction: getMaxNumberOfTokens,
@@ -29,7 +27,7 @@ export default function Home() {
         isLoading: isLoadingMaxNumberOfTokens,
     } = useWeb3Contract({
         abi: nftAbi,
-        contractAddress: contractAddress,
+        contractAddress: nftContractAddress,
         functionName: "getMaxNumberOfTokens",
         params: {},
     })
@@ -40,14 +38,14 @@ export default function Home() {
         isLoading: isLoadingTotalSupply,
     } = useWeb3Contract({
         abi: nftAbi,
-        contractAddress: contractAddress,
+        contractAddress: nftContractAddress,
         functionName: "totalSupply",
         params: {},
     })
 
     const { runContractFunction: getPrice } = useWeb3Contract({
         abi: nftAbi,
-        contractAddress: contractAddress,
+        contractAddress: nftContractAddress,
         functionName: "getPrice",
         params: {},
     })
@@ -71,7 +69,7 @@ export default function Home() {
         isLoading: isLoadingMint,
     } = useWeb3Contract({
         abi: nftAbi,
-        contractAddress: contractAddress,
+        contractAddress: nftContractAddress,
         functionName: "mint",
         params: {
             _address: account,

@@ -2,12 +2,12 @@
 import { GrClose } from "react-icons/gr"
 import { FaAngleRight } from "react-icons/fa"
 import Link from "next/link"
-import { appContext } from "./context"
+import { appContext } from "../../context"
 import { useContext } from "react"
+import { AiFillHome } from "react-icons/ai"
 
 export default function SideBar() {
-
-    const { toggleSideBar, sideBar, data } = useContext(appContext)
+    const { toggleSideBar, sideBar, data, pathname } = useContext(appContext)
 
     return (
         <aside
@@ -30,15 +30,18 @@ export default function SideBar() {
                     {data.map((item, index) => {
                         return (
                             <Link
-                                href={item.href}
+                            onClick={toggleSideBar}
+                                href={!pathname.includes(item.name) ? item.href : "/"}
                                 key={index}
                                 className="flex justify-between items-center text-xl px-2 py-2 rounded-xl hover:bg-stone-400"
                             >
                                 <div className="flex space-x-1 item-center">
                                     <div className="flex items-center justify-center">
-                                        {item.icon}
+                                        {!pathname.includes(item.name) ? item.icon : <AiFillHome />}
                                     </div>
-                                    <h3 className="capitalize">{item.name}</h3>
+                                    <h3 className="capitalize">
+                                        {!pathname.includes(item.name) ? item.name : "home"}
+                                    </h3>
                                 </div>
 
                                 <div>

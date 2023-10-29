@@ -1,10 +1,12 @@
 {
     "31337": {
         "Nft": ["0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"],
-        "Whitelist": ["0x5FbDB2315678afecb367f032d93F642f64180aa3"]
+        "Whitelist": ["0x5FbDB2315678afecb367f032d93F642f64180aa3"],
+        "Marketplace": ["0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"]
     },
     "11155111": {
-        "Nft": ["0xB3c2693686a18FA69BfD6D8B50c1c5A56f208fAa"],
-        "Whitelist": ["0xb94067e4A257c37579Fd4d94C87D74b9CCA5DeB6"]
+        "Nft": ["0xF5c6E59Fc3899d242E3d2AaF4209149A41CfB8Aa"],
+        "Whitelist": ["0x53966e55ED59d38E62694B726d8906019f64bc77"],
+        "Marketplace": ["0x853D36Ce6b6c4Ed39d5161DA0C24f9303b2Ff27e"]
     }
 }

@@ -1,10 +1,14 @@
 import { Inter } from "next/font/google"
 import "./globals.css"
 import Header from "./components/Header"
-import { MoralisProvider } from "./components/useClient"
-import { NotificationProvider } from "./components/useClient"
+import {
+    MoralisProvider,
+    NotificationProvider,
+    ApolloProvider,
+    client,
+} from "./components/useClient"
 import SideBar from "./components/SideBar"
-import {Context} from "./components/context"
+import { Context } from "../context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,15 +21,17 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body className={`${inter.className}`}>
-                <Context>
-                    <MoralisProvider initializeOnMount={false}>
-                        <NotificationProvider>
-                            <SideBar />
-                            <Header />
-                            {children}
-                        </NotificationProvider>
-                    </MoralisProvider>
-                </Context>
+                <MoralisProvider initializeOnMount={false}>
+                    <Context>
+                        <ApolloProvider client={client}>
+                            <NotificationProvider>
+                                <SideBar />
+                                <Header />
+                                {children}
+                            </NotificationProvider>
+                        </ApolloProvider>
+                    </Context>
+                </MoralisProvider>
             </body>
         </html>
     )
