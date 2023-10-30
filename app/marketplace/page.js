@@ -1,10 +1,8 @@
-// import MarketplaceHeader from "../components/marketplaceHeader"
-
 import { appContext } from "@/context"
 import { useContext } from "react"
-import { useWeb3Contract } from "react-moralis"
-import { marketplaceAbi } from "@/constants"
-import { ethers } from "ethers"
+// import { useWeb3Contract } from "react-moralis"
+// import { marketplaceAbi } from "@/constants"
+// import { ethers } from "ethers"
 
 export default function Listings() {
     const { marketplaceContractAddress, nftContractAddress, } = useContext(appContext)

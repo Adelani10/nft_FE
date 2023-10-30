@@ -31,6 +31,7 @@ function Context({ children }) {
             icon: <BsImages />,
         },
     ]
+    const images = ["/duck-8.svg", "/duck-15.svg", "/duck-17.svg"]
     const { isWeb3Enabled, account, chainId: chainIdhex } = useMoralis()
     const chainId = parseInt(chainIdhex)
     const nftContractAddress =
@@ -55,6 +56,7 @@ function Context({ children }) {
                 sideBar,
                 toggleSideBar,
                 data,
+                images,
                 pathname,
                 chainId,
                 isWeb3Enabled,

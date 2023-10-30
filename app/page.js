@@ -4,21 +4,19 @@ import Link from "next/link"
 import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa"
 import { useWeb3Contract } from "react-moralis"
 import { whitelistAbi, nftAbi } from "@/constants"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { ethers } from "ethers"
 import { useNotification } from "@web3uikit/core"
-import { useContext } from "react"
 import { appContext } from "@/context"
 
 export default function Home() {
-    const images = ["/duck-8.svg", "/duck-15.svg", "/duck-17.svg"]
     const [amtMinted, setAmtMinted] = useState("0")
     const [maxNumberOfTokens, setMaxNumberOfTokens] = useState("0")
     const [uiPrice, setUiPrice] = useState("0")
     const [isAddyWhitelisted, setIsAddyWhitelisted] = useState(null)
     const dispatch = useNotification()
 
-    const { nftContractAddress, whitelistContractAddress, isWeb3Enabled, account } =
+    const { nftContractAddress, whitelistContractAddress, isWeb3Enabled, images, account } =
         useContext(appContext)
 
     const {
