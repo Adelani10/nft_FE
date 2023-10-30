@@ -9,4 +9,4 @@ const client = new ApolloClient({
     uri: "https://api.studio.thegraph.com/query/54625/marketplace/v0.0.1"
 })
 
-export {MoralisProvider, NotificationProvider, ApolloClient, ApolloProvider, client}
+export { MoralisProvider, NotificationProvider, ApolloProvider, client }

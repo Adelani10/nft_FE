@@ -2,7 +2,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa"
-import { useMoralis, useWeb3Contract } from "react-moralis"
+import { useWeb3Contract } from "react-moralis"
 import { whitelistAbi, nftAbi } from "@/constants"
 import { useState, useEffect } from "react"
 import { ethers } from "ethers"

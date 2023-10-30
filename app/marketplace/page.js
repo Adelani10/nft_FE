@@ -7,36 +7,26 @@ import { marketplaceAbi } from "@/constants"
 import { ethers } from "ethers"
 
 export default function Listings() {
-    const { marketplaceContractAddress, nftContractAddress } = useContext(appContext)
+    const { marketplaceContractAddress, nftContractAddress, } = useContext(appContext)
 
-    const {
-        runContractFunction: listItem,
-        isFetching: isFetchingList,
-        isLoading: isLoadingList,
-    } = useWeb3Contract({
-        abi: marketplaceAbi,
-        contractAddress: marketplaceContractAddress,
-        functionName: "listItem",
-        params: {
-            nftAddress: nftContractAddress,
-            tokenId: 1,
-            price: ethers.utils.parseEther("0.02"),
-        },
-    })
+    // const {
+    //     runContractFunction: listItem,
+    //     isFetching: isFetchingList,
+    //     isLoading: isLoadingList,
+    // } = useWeb3Contract({
+    //     abi: marketplaceAbi,
+    //     contractAddress: marketplaceContractAddress,
+    //     functionName: "listItem",
+    //     params: {
+    //         nftAddress: nftContractAddress,
+    //         tokenId: 1,
+    //         price: ethers.utils.parseEther("0.02"),
+    //     },
+    // })
 
-    // console.log(listedItems)
     return (
         <div className="flex flex-col container capitalize mx-auto">
-            <button
-                disabled={isFetchingList || isLoadingList}
-                onClick={async () => {
-                    await listItem({
-                        onError: () => console.log(error),
-                    })
-                }}
-            >
-                list
-            </button>
+            <button>list</button>
         </div>
     )
 }

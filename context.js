@@ -6,7 +6,8 @@ import { BsImages } from "react-icons/bs"
 import { usePathname } from "next/navigation"
 import { contractAddresses } from "./constants"
 import { useMoralis } from "react-moralis"
-import { useQuery, gql } from "@apollo/client"
+import { useQuery } from "@apollo/client"
+import GET_ACTIVE_ITEMS from "./constants/subgraphQueries"
 
 const appContext = createContext(null)
 
@@ -39,18 +40,10 @@ function Context({ children }) {
     const marketplaceContractAddress =
         chainId in contractAddresses ? contractAddresses[chainId]["Marketplace"][0] : null
 
-    const GET_ACTIVE_ITEMS = gql`{
-        activeItems(first: 5, where: {buyer: "0x0000000000000000000000000000000000000000"}) {
-            id
-            buyer
-            seller
-            nftAddress
-            tokenId
-            price
-        }
-    }`
+//    const {data: listing, error, loading} = useQuery(GET_ACTIVE_ITEMS)
+//    const {activeItems} = listing
+//    console.log(activeItems)
 
-    // const { loading, error, data: listedItems } = useQuery(GET_ACTIVE_ITEMS)
 
     const toggleSideBar = () => {
         setSideBar(!sideBar)
@@ -69,7 +62,6 @@ function Context({ children }) {
                 nftContractAddress,
                 whitelistContractAddress,
                 marketplaceContractAddress,
-                // listedItems,
             }}
         >
             {children}
