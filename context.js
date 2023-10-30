@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 import { contractAddresses } from "./constants"
 import { useMoralis } from "react-moralis"
 import { useQuery } from "@apollo/client"
-// import GET_ACTIVE_ITEMS from "./constants/subgraphQueries"
+import GET_ACTIVE_ITEMS from "./constants/subgraphQueries"
 
 const appContext = createContext(null)
 
