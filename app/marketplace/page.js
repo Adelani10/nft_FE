@@ -1,3 +1,4 @@
+"use client"
 import { appContext } from "@/context"
 import { useContext } from "react"
 // import { useWeb3Contract } from "react-moralis"
