@@ -20,7 +20,6 @@ export default function NftBox({ buyer, seller, nftAddress, tokenId, price }) {
         account,
         showModal,
         handleModalTrue,
-        handleModalFalse,
     } = useContext(appContext)
     const dispatch = useNotification()
 

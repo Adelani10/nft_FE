@@ -209,10 +209,10 @@ export default function Header() {
                         </div>
                     </div>
                 ) : (
-                    <div className="md:flex space-x-24 lg:space-x-48 hidden">
-                        <Link href="/">Home</Link>
-                        <Link href="/marketplace">Listings</Link>
-                        <Link href="/marketplace/sell">Sell Nfts</Link>
+                    <div className="flex item-center space-x-24 lg:space-x-48">
+                        <Link href="/" className="hidden md:inline-block">Home</Link>
+                        <Link href="/marketplace" className="hidden md:inline-block">Listings</Link>
+                        <Link href="/marketplace/sell" className="">Sell</Link>
                     </div>
                 )}
 
