@@ -9,29 +9,24 @@ import { BsImages } from "react-icons/bs"
 import { ConnectButton } from "@web3uikit/web3"
 import { Modal, useNotification, Input } from "@web3uikit/core"
 import { useContext, useState } from "react"
-import { whitelistAbi, } from "@/constants"
+import { whitelistAbi } from "@/constants"
 import { useWeb3Contract } from "react-moralis"
 import { appContext } from "../../context"
 
 export default function Header() {
-    const [showModal, setShowModal] = useState(false)
     const [dropDown, setDropDown] = useState(false)
     const [address, setAddress] = useState("0x00000000")
     const [addWhitelistModal, setAddWhitelistModal] = useState(false)
     const dispatch = useNotification()
 
-
-    const { toggleSideBar, pathname, whitelistContractAddress } = useContext(appContext)
-
-    
-
-    const handleModalFalse = () => {
-        setShowModal(false)
-    }
-
-    const handleModalTrue = () => {
-        setShowModal(true)
-    }
+    const {
+        toggleSideBar,
+        pathname,
+        whitelistContractAddress,
+        showModal,
+        handleModalFalse,
+        handleModalTrue,
+    } = useContext(appContext)
 
     const {
         runContractFunction: addWhitelist,

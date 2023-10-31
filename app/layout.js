@@ -22,15 +22,15 @@ export default function RootLayout({ children }) {
         <html lang="en">
             <body className={`${inter.className}`}>
                 <MoralisProvider initializeOnMount={false}>
-                    <Context>
-                        <ApolloProvider client={client}>
+                    <ApolloProvider client={client}>
+                        <Context>
                             <NotificationProvider>
                                 <SideBar />
                                 <Header />
                                 {children}
                             </NotificationProvider>
-                        </ApolloProvider>
-                    </Context>
+                        </Context>
+                    </ApolloProvider>
                 </MoralisProvider>
             </body>
         </html>

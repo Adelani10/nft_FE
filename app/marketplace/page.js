@@ -1,12 +1,15 @@
 "use client"
 import { appContext } from "@/context"
 import { useContext } from "react"
+import { Card } from "@web3uikit/core"
+import NftBox from "../components/nftBox"
 // import { useWeb3Contract } from "react-moralis"
 // import { marketplaceAbi } from "@/constants"
 // import { ethers } from "ethers"
 
 export default function Listings() {
-    const { marketplaceContractAddress, nftContractAddress, } = useContext(appContext)
+    const { marketplaceContractAddress, loading, listedNfts, isWeb3Enabled } =
+        useContext(appContext)
 
     // const {
     //     runContractFunction: listItem,
@@ -24,8 +27,28 @@ export default function Listings() {
     // })
 
     return (
-        <div className="flex flex-col container capitalize mx-auto">
-            <button>list</button>
+        <div className="flex flex-col container mx-auto">
+            <div>
+                {loading ? (
+                    <div>Loading...</div>
+                ) : (
+                    <div>
+                        {listedNfts.activeItems.map((item, index) => {
+                            const { id, buyer, seller, nftAddress, tokenId, price } = item
+                            return (
+                                <NftBox
+                                    key={index}
+                                    buyer={buyer}
+                                    seller={seller}
+                                    nftAddress={nftAddress}
+                                    tokenId={tokenId}
+                                    price={price}
+                                />
+                            )
+                        })}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

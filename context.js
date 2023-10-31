@@ -6,14 +6,14 @@ import { BsImages } from "react-icons/bs"
 import { usePathname } from "next/navigation"
 import { contractAddresses } from "./constants"
 import { useMoralis } from "react-moralis"
-import { useQuery } from "@apollo/client"
-import GET_ACTIVE_ITEMS from "./constants/subgraphQueries"
+import { useQuery, gql } from "@apollo/client"
 
 const appContext = createContext(null)
 
 function Context({ children }) {
     const pathname = usePathname()
     const [sideBar, setSideBar] = useState(false)
+    const [showModal, setShowModal] = useState(false)
     const data = [
         {
             href: "/marketplace",
@@ -41,13 +41,31 @@ function Context({ children }) {
     const marketplaceContractAddress =
         chainId in contractAddresses ? contractAddresses[chainId]["Marketplace"][0] : null
 
-//    const {data: listing, error, loading} = useQuery(GET_ACTIVE_ITEMS)
-//    const {activeItems} = listing
-//    console.log(activeItems)
+    const GET_ACTIVE_ITEMS = gql`
+        {
+            activeItems(first: 5, where: { buyer: "0x0000000000000000000000000000000000000000" }) {
+                id
+                buyer
+                seller
+                nftAddress
+                tokenId
+                price
+            }
+        }
+    `
 
+    const { loading, error, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS)
 
     const toggleSideBar = () => {
         setSideBar(!sideBar)
+    }
+
+    const handleModalFalse = () => {
+        setShowModal(false)
+    }
+
+    const handleModalTrue = () => {
+        setShowModal(true)
     }
 
     return (
@@ -64,6 +82,11 @@ function Context({ children }) {
                 nftContractAddress,
                 whitelistContractAddress,
                 marketplaceContractAddress,
+                listedNfts,
+                loading,
+                showModal,
+                handleModalFalse,
+                handleModalTrue,
             }}
         >
             {children}
