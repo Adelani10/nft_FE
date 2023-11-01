@@ -106,7 +106,7 @@ export default function Header() {
     }
 
     return (
-        <nav className="py-8 border-b">
+        <nav className="py-8 border-b px-3">
             <div className="container mx-auto flex justify-between items-center ">
                 <button onClick={() => toggleSideBar()} className="lg:hidden text-2xl">
                     <GrTextAlignCenter />

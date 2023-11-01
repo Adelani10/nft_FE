@@ -118,7 +118,7 @@ export default function NftBox({ buyer, seller, nftAddress, tokenId, price }) {
                             alt="Nft"
                             src={imageUri}
                             width={150}
-                            height={150}
+                            height={120}
                             className="mx-auto"
                         />
                         <h2>{ethers.utils.formatUnits(price, "ether")} ETH</h2>
