@@ -26,6 +26,20 @@ export default function UpdateListing({ nftAddress, tokenId }) {
         },
     })
 
+    const {
+        runContractFunction: cancelListing,
+        isFetching: isFetchingCancellation,
+        isLoading: isLoadingCancellation,
+    } = useWeb3Contract({
+        abi: marketplaceAbi,
+        contractAddress: marketplaceContractAddress,
+        functionName: "cancelListing",
+        params: {
+            nftAddress: nftAddress,
+            tokenId: tokenId,
+        },
+    })
+
     const handleUpdateListingSuccess = async (tx) => {
         try {
             await tx.wait(1)
@@ -33,6 +47,22 @@ export default function UpdateListing({ nftAddress, tokenId }) {
                 type: "success",
                 message: "Price updated successfully",
                 title: "Update Listing",
+                position: "topR",
+            })
+            handleModalFalse()
+            setPriceToUpdateListingWith("0")
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleCancelSuccess = async (tx) => {
+        try {
+            await tx.wait(1)
+            dispatch({
+                type: "success",
+                message: "Listing cancelled",
+                title: "Cancel Listing",
                 position: "topR",
             })
             handleModalFalse()
@@ -50,11 +80,16 @@ export default function UpdateListing({ nftAddress, tokenId }) {
                 isOkDisabled={isFetchingUpdate || isLoadingUpdate}
                 isCancelDisabled={isFetchingUpdate || isLoadingUpdate}
                 okText={"Update"}
-                onCancel={handleModalFalse}
+                onCancel={async () => {
+                    await cancelListing({
+                        onError: (error) => console.log(error),
+                        onSuccess: handleCancelSuccess
+                    })
+                }}
                 onCloseButtonPressed={handleModalFalse}
                 onOk={async () => {
                     await updateListing({
-                        onError: () => console.log(error),
+                        onError: (error) => console.log(error),
                         onSuccess: handleUpdateListingSuccess,
                     })
                 }}

@@ -7,7 +7,7 @@ import { AiOutlineShoppingCart } from "react-icons/ai"
 import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io"
 import { BsImages } from "react-icons/bs"
 import { Modal, useNotification, Input } from "@web3uikit/core"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { whitelistAbi } from "@/constants"
 import { useWeb3Contract } from "react-moralis"
 import { appContext } from "../../context"
@@ -17,6 +17,7 @@ export default function Header() {
     const [dropDown, setDropDown] = useState(false)
     const [address, setAddress] = useState("0x00000000")
     const [addWhitelistModal, setAddWhitelistModal] = useState(false)
+    const [isWhitelisted, setIsWhitelisted] = useState(null)
     const dispatch = useNotification()
 
     const {
@@ -26,6 +27,8 @@ export default function Header() {
         showModal,
         handleModalFalse,
         handleModalTrue,
+        account,
+        isWeb3Enabled
     } = useContext(appContext)
 
     const {
@@ -53,6 +56,28 @@ export default function Header() {
             _address: address,
         },
     })
+
+    const {
+        runContractFunction: isAddressWhitelisted,
+        isFetching: isFetchingIfAddressIsWhitelisted,
+        isLoading: isLoadingIfAddressIsWhitelisted,
+    } = useWeb3Contract({
+        abi: whitelistAbi,
+        contractAddress: whitelistContractAddress,
+        functionName: "isAddressWhitelisted",
+        params: {
+            _address: account,
+        },
+    })
+
+    const updateUI = async () => {
+        const isWled= await isAddressWhitelisted()
+        setIsWhitelisted(isWled) 
+    }
+
+    useEffect(() => {
+        updateUI()
+    }, [isWeb3Enabled, account])
 
     const handleWhitelistingSuccess = async (tx) => {
         try {
@@ -106,7 +131,7 @@ export default function Header() {
     }
 
     return (
-        <nav className="py-8 border-b pl-3">
+        <nav className="py-8 border-b pl-6">
             <div className="container mx-auto flex justify-between items-center ">
                 <button onClick={() => toggleSideBar()} className="lg:hidden text-2xl">
                     <GrTextAlignCenter />
@@ -152,13 +177,21 @@ export default function Header() {
 
                         <div className=" ">
                             <div className="relative lg:hidden hover:scale-125">
-                                <button
-                                    onClick={() => setDropDown(!dropDown)}
-                                    className="flex text-lg space-x-1 bg-sky-800 md:px-4 rounded-lg p-2 items-center justify-center"
-                                >
-                                    <h3>Whitelist</h3>
-                                    {!dropDown ? <IoIosArrowDropdown /> : <IoIosArrowDropup />}
-                                </button>
+                                {account === "0xeD670599BacD6B6e50431B49288c4dCE266a26EF" ? (
+                                    <button
+                                        onClick={() => setDropDown(!dropDown)}
+                                        className="flex text-lg space-x-1 bg-sky-800 md:px-4 rounded-lg p-2 items-center justify-center"
+                                    >
+                                        <h3>Whitelist</h3>
+                                        {!dropDown ? <IoIosArrowDropdown /> : <IoIosArrowDropup />}
+                                    </button>
+                                ) : (
+                                    <button onClick={() => {
+
+                                    }} className="flex text-lg space-x-1 bg-sky-800 rounded-lg p-2 items-center justify-center">
+                                        Check WL
+                                    </button>
+                                )}
                             </div>
 
                             <div className="lg:flex hidden text-lg space-x-2 xl:space-x-8">

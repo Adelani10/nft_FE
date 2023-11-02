@@ -11,7 +11,7 @@ export default function Listings() {
     const { loading, listedNfts } = useContext(appContext)
 
     return (
-        <div className="flex flex-col container mx-auto">
+        <div className="flex flex-col container mx-auto px-6">
             <div>
                 {loading ? (
                     <div>Loading...</div>

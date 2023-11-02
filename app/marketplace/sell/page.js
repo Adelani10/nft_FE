@@ -97,7 +97,7 @@ export default function Sell() {
     }
 
     return (
-        <div className="flex flex-col bg-white h-screen">
+        <div className="flex flex-col bg-white h-screen px-6">
             <Form
                 onSubmit={approveAndList}
                 data={[

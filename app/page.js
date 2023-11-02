@@ -108,7 +108,7 @@ export default function Home() {
     }
 
     return (
-        <main className="pt-4">
+        <main className="pt-4 px-6">
             {isWeb3Enabled ? (
                 <div className="container mx-auto flex flex-col space-y-8">
                     <h1 className="sm:text-8xl text-6xl text-center">
