@@ -6,12 +6,12 @@ import { ImRoad } from "react-icons/im"
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io"
 import { BsImages } from "react-icons/bs"
-import { ConnectButton } from "@web3uikit/web3"
 import { Modal, useNotification, Input } from "@web3uikit/core"
 import { useContext, useState } from "react"
 import { whitelistAbi } from "@/constants"
 import { useWeb3Contract } from "react-moralis"
 import { appContext } from "../../context"
+import { ConnectButton } from "@web3uikit/web3"
 
 export default function Header() {
     const [dropDown, setDropDown] = useState(false)
@@ -106,7 +106,7 @@ export default function Header() {
     }
 
     return (
-        <nav className="py-8 border-b px-3">
+        <nav className="py-8 border-b pl-3">
             <div className="container mx-auto flex justify-between items-center ">
                 <button onClick={() => toggleSideBar()} className="lg:hidden text-2xl">
                     <GrTextAlignCenter />
@@ -159,31 +159,6 @@ export default function Header() {
                                     <h3>Whitelist</h3>
                                     {!dropDown ? <IoIosArrowDropdown /> : <IoIosArrowDropup />}
                                 </button>
-                                {dropDown && (
-                                    <div className="bg-white rounded-md flex -translate-x-[22%] md:-translate-x-[19%] border text-sky-800 flex-col absolute p-2 min-w-[200px]">
-                                        <button
-                                            onClick={() => {
-                                                setDropDown(false)
-                                                setAddWhitelistModal(true)
-                                                handleModalTrue()
-                                            }}
-                                            className="hover:bg-stone-200 md:px-4 rounded-lg p-2"
-                                        >
-                                            Add WL!! 🫡
-                                        </button>
-
-                                        <button
-                                            onClick={() => {
-                                                setDropDown(false)
-                                                setAddWhitelistModal(false)
-                                                handleModalTrue()
-                                            }}
-                                            className=" md:px-4 hover:bg-stone-200 rounded-lg p-2"
-                                        >
-                                            Remove WL!! 😡
-                                        </button>
-                                    </div>
-                                )}
                             </div>
 
                             <div className="lg:flex hidden text-lg space-x-2 xl:space-x-8">
@@ -210,15 +185,47 @@ export default function Header() {
                     </div>
                 ) : (
                     <div className="flex item-center space-x-24 lg:space-x-48">
-                        <Link href="/" className="hidden md:inline-block">Home</Link>
-                        <Link href="/marketplace" className="hidden md:inline-block">Listings</Link>
-                        <Link href="/marketplace/sell" className="">Sell</Link>
+                        <Link href="/" className="hidden md:inline-block">
+                            Home
+                        </Link>
+                        <Link href="/marketplace" className="hidden md:inline-block">
+                            Listings
+                        </Link>
+                        <Link href="/marketplace/sell" className="">
+                            Sell
+                        </Link>
                     </div>
                 )}
 
                 <div className="">
                     <ConnectButton />
                 </div>
+
+                {dropDown && (
+                    <div className="bg-white rounded-md flex -translate-x-[22%] md:-translate-x-[19%] border text-sky-800 flex-col absolute p-2 min-w-[200px]">
+                        <button
+                            onClick={() => {
+                                setDropDown(false)
+                                setAddWhitelistModal(true)
+                                handleModalTrue()
+                            }}
+                            className="hover:bg-stone-200 md:px-4 rounded-lg p-2"
+                        >
+                            Add WL!! 🫡
+                        </button>
+
+                        <button
+                            onClick={() => {
+                                setDropDown(false)
+                                setAddWhitelistModal(false)
+                                handleModalTrue()
+                            }}
+                            className=" md:px-4 hover:bg-stone-200 rounded-lg p-2"
+                        >
+                            Remove WL!! 😡
+                        </button>
+                    </div>
+                )}
             </div>
         </nav>
     )
