@@ -32,8 +32,8 @@ function Context({ children }) {
         },
     ]
     const images = ["/duck-8.svg", "/duck-15.svg", "/duck-17.svg"]
-    const { isWeb3Enabled, account, chainId: chainIdhex } = useMoralis()
-    const chainId = parseInt(chainIdhex)
+    const { isWeb3Enabled, account, chainId: chainIdHex } = useMoralis()
+    const chainId = parseInt(chainIdHex)
     const nftContractAddress =
         chainId in contractAddresses ? contractAddresses[chainId]["Nft"][0] : null
     const whitelistContractAddress =
@@ -77,6 +77,7 @@ function Context({ children }) {
                 images,
                 pathname,
                 chainId,
+                chainIdHex,
                 isWeb3Enabled,
                 account,
                 nftContractAddress,
