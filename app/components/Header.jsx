@@ -18,6 +18,7 @@ export default function Header() {
     const [address, setAddress] = useState("0x00000000")
     const [addWhitelistModal, setAddWhitelistModal] = useState(false)
     const [isWhitelisted, setIsWhitelisted] = useState(null)
+    const [showCheckModal, setShowCheckModal] = useState(false)
     const dispatch = useNotification()
 
     const {
@@ -28,7 +29,7 @@ export default function Header() {
         handleModalFalse,
         handleModalTrue,
         account,
-        isWeb3Enabled
+        isWeb3Enabled,
     } = useContext(appContext)
 
     const {
@@ -69,15 +70,6 @@ export default function Header() {
             _address: account,
         },
     })
-
-    const updateUI = async () => {
-        const isWled= await isAddressWhitelisted()
-        setIsWhitelisted(isWled) 
-    }
-
-    useEffect(() => {
-        updateUI()
-    }, [isWeb3Enabled, account])
 
     const handleWhitelistingSuccess = async (tx) => {
         try {
@@ -130,10 +122,31 @@ export default function Header() {
         )
     }
 
+    const handleWlSuccess = async () => {
+        const isWled = await isAddressWhitelisted()
+        setIsWhitelisted(isWled)
+        if (isWhitelisted === true) {
+            dispatch({
+                type: "success",
+                message: "Congrats, Whitelist",
+                title: "WL Status",
+                position: "topR",
+            })
+        } else {
+            dispatch({
+                type: "error",
+                message: "Not, Whitelisted",
+                title: "WL Status",
+                position: "topR",
+            })
+        }
+        handleModalFalse()
+    }
+
     return (
         <nav className="py-8 border-b pl-6">
             <div className="container mx-auto flex justify-between items-center ">
-                <button onClick={() => toggleSideBar()} className="lg:hidden text-2xl">
+                <button onClick={() => isWeb3Enabled ? toggleSideBar() : ""} className="lg:hidden text-2xl">
                     <GrTextAlignCenter />
                 </button>
                 {!pathname.includes("/marketplace") ? (
@@ -175,46 +188,85 @@ export default function Header() {
                             </Link>
                         </div>
 
-                        <div className=" ">
-                            <div className="relative lg:hidden hover:scale-125">
-                                {account === "0xeD670599BacD6B6e50431B49288c4dCE266a26EF" ? (
-                                    <button
-                                        onClick={() => setDropDown(!dropDown)}
-                                        className="flex text-lg space-x-1 bg-sky-800 md:px-4 rounded-lg p-2 items-center justify-center"
+                        {isWeb3Enabled ? (
+                            <div className=" ">
+                                <div className="relative lg:hidden hover:scale-125">
+                                    {account.localeCompare(
+                                        "0xeD670599BacD6B6e50431B49288c4dCE266a26EF",
+                                        undefined,
+                                        { sensitivity: "base" },
+                                    ) === 0 ? (
+                                        <button
+                                            onClick={() => setDropDown(!dropDown)}
+                                            className="flex text-lg space-x-1 bg-sky-800 md:px-4 rounded-lg p-2 items-center justify-center"
+                                        >
+                                            <h3>Whitelist</h3>
+                                            {!dropDown ? (
+                                                <IoIosArrowDropdown />
+                                            ) : (
+                                                <IoIosArrowDropup />
+                                            )}
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => {
+                                                setShowCheckModal(true)
+                                            }}
+                                            className="flex text-lg space-x-1 bg-sky-800 rounded-lg p-2 items-center justify-center"
+                                        >
+                                            Check WL
+                                        </button>
+                                    )}
+                                </div>
+
+                                {showCheckModal && (
+                                    <Modal
+                                        cancelText="Cancel"
+                                        id="regular"
+                                        isVisible={showCheckModal}
+                                        okText="Check"
+                                        onCancel={() => setShowCheckModal(false)}
+                                        onCloseButtonPressed={() => setShowCheckModal(false)}
+                                        onOk={async () => {
+                                            await isAddressWhitelisted({
+                                                onError: (error) => console.log(error),
+                                                onSuccess: handleWlSuccess,
+                                            })
+                                        }}
+                                        title="Check WL Status"
                                     >
-                                        <h3>Whitelist</h3>
-                                        {!dropDown ? <IoIosArrowDropdown /> : <IoIosArrowDropup />}
-                                    </button>
-                                ) : (
-                                    <button onClick={() => {
-
-                                    }} className="flex text-lg space-x-1 bg-sky-800 rounded-lg p-2 items-center justify-center">
-                                        Check WL
-                                    </button>
+                                        <Input
+                                            label="Address"
+                                            width="100%"
+                                            onChange={(event) => setAddress(event.target.value)}
+                                        />
+                                    </Modal>
                                 )}
-                            </div>
 
-                            <div className="lg:flex hidden text-lg space-x-2 xl:space-x-8">
-                                <button
-                                    onClick={() => {
-                                        setAddWhitelistModal(true)
-                                        handleModalTrue()
-                                    }}
-                                    className=" bg-sky-800 w-48 rounded-lg py-2"
-                                >
-                                    Add WL!! 🫡
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setAddWhitelistModal(false)
-                                        handleModalTrue()
-                                    }}
-                                    className=" bg-sky-800 w-48 rounded-lg py-2"
-                                >
-                                    Remove WL!! 😡
-                                </button>
+                                <div className="lg:flex hidden text-lg space-x-2 xl:space-x-8">
+                                    <button
+                                        onClick={() => {
+                                            setAddWhitelistModal(true)
+                                            handleModalTrue()
+                                        }}
+                                        className=" bg-sky-800 w-48 rounded-lg py-2"
+                                    >
+                                        Add WL!! 🫡
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setAddWhitelistModal(false)
+                                            handleModalTrue()
+                                        }}
+                                        className=" bg-sky-800 w-48 rounded-lg py-2"
+                                    >
+                                        Remove WL!! 😡
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            ""
+                        )}
                     </div>
                 ) : (
                     <div className="flex item-center space-x-24 lg:space-x-48">

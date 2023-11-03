@@ -1,9 +1,4 @@
 {
-    "31337": {
-        "Nft": ["0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"],
-        "Whitelist": ["0x5FbDB2315678afecb367f032d93F642f64180aa3"],
-        "Marketplace": ["0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"]
-    },
     "11155111": {
         "Nft": ["0x67837b52083cbf282Be87fe1dC6dDE608B04f40a"],
         "Whitelist": ["0x0fdb1a2Fc4A58875050fdD16108c9F9aA7a9B481"],
