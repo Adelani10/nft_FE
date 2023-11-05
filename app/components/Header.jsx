@@ -144,9 +144,12 @@ export default function Header() {
     }
 
     return (
-        <nav className="py-8 border-b pl-6">
+        <nav className="py-8 border-b pl-6 relative">
             <div className="container mx-auto flex justify-between items-center ">
-                <button onClick={() => isWeb3Enabled ? toggleSideBar() : ""} className="lg:hidden text-2xl">
+                <button
+                    onClick={() => (isWeb3Enabled ? toggleSideBar() : "")}
+                    className="lg:hidden text-2xl"
+                >
                     <GrTextAlignCenter />
                 </button>
                 {!pathname.includes("/marketplace") ? (
@@ -173,51 +176,99 @@ export default function Header() {
                                   "Remove Whitelist",
                               )}
 
+                        {/* Big screen nav options */}
                         <div className="lg:flex hidden items-center space-x-3 lg:space-x-8 sm:space-x-5">
-                            <Link href="/marketplace" className="flex space-x-1 item-center">
+                            <Link href="/marketplace" className="flex space-x-1 items-center">
                                 <AiOutlineShoppingCart />
                                 <h3>Marketplace</h3>
                             </Link>
-                            <Link href="/roadmap" className="flex space-x-1 item-center">
+                            <Link href="/roadmap" className="flex space-x-1 items-center">
                                 <ImRoad />
                                 <h3>Roadmap</h3>
                             </Link>
-                            <Link href="/my-nfts" className="flex space-x-1 item-center">
+                            <Link href="/my-nfts" className="flex space-x-1 items-center">
                                 <BsImages />
                                 <h3>My Nfts</h3>
                             </Link>
                         </div>
 
-                        {isWeb3Enabled ? (
-                            <div className=" ">
-                                <div className="relative lg:hidden hover:scale-125">
-                                    {account.localeCompare(
-                                        "0xeD670599BacD6B6e50431B49288c4dCE266a26EF",
-                                        undefined,
-                                        { sensitivity: "base" },
-                                    ) === 0 ? (
-                                        <button
-                                            onClick={() => setDropDown(!dropDown)}
-                                            className="flex text-lg space-x-1 bg-sky-800 md:px-4 rounded-lg p-2 items-center justify-center"
-                                        >
-                                            <h3>Whitelist</h3>
-                                            {!dropDown ? (
-                                                <IoIosArrowDropdown />
-                                            ) : (
-                                                <IoIosArrowDropup />
-                                            )}
-                                        </button>
-                                    ) : (
+                        {isWeb3Enabled && (
+                            <div className=" flex items-center lg:ml-6">
+                                {account.localeCompare(
+                                    "0xeD670599BacD6B6e50431B49288c4dCE266a26EF",
+                                    undefined,
+                                    { sensitivity: "base" },
+                                ) !== 0 ? (
+                                    <button
+                                        onClick={() => {
+                                            setShowCheckModal(true)
+                                        }}
+                                        className="flex text-lg space-x-1 bg-sky-800 rounded-lg p-2 items-center justify-center"
+                                    >
+                                        Check WL
+                                    </button>
+                                ) : (
+                                    <div className="flex text-lg space-x-2 xl:space-x-8">
                                         <button
                                             onClick={() => {
-                                                setShowCheckModal(true)
+                                                setAddWhitelistModal(true)
+                                                handleModalTrue()
                                             }}
-                                            className="flex text-lg space-x-1 bg-sky-800 rounded-lg p-2 items-center justify-center"
+                                            className=" bg-sky-800 w-48 hidden lg:inline-block rounded-lg py-2"
                                         >
-                                            Check WL
+                                            Add WL!! 🫡
                                         </button>
-                                    )}
-                                </div>
+                                        <button
+                                            onClick={() => {
+                                                setAddWhitelistModal(false)
+                                                handleModalTrue()
+                                            }}
+                                            className=" bg-sky-800 w-48 hidden lg:inline-block  rounded-lg py-2"
+                                        >
+                                            Remove WL!! 😡
+                                        </button>
+
+                                        <div className="lg:hidden ">
+                                            <button
+                                                onClick={() => setDropDown(!dropDown)}
+                                                className="flex text-lg space-x-1 bg-sky-800 md:px-4 rounded-lg p-2 items-center justify-center"
+                                            >
+                                                <h3>Whitelist</h3>
+                                                {!dropDown ? (
+                                                    <IoIosArrowDropdown />
+                                                ) : (
+                                                    <IoIosArrowDropup />
+                                                )}
+                                            </button>
+
+                                            {dropDown && (
+                                                <div className="bg-white rounded-md flex bottom-[-70%] border text-sky-800 flex-col absolute p-2 min-w-[200px]">
+                                                    <button
+                                                        onClick={() => {
+                                                            setDropDown(false)
+                                                            setAddWhitelistModal(true)
+                                                            handleModalTrue()
+                                                        }}
+                                                        className="hover:bg-stone-200 md:px-4 rounded-lg p-2"
+                                                    >
+                                                        Add WL!! 🫡
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => {
+                                                            setDropDown(false)
+                                                            setAddWhitelistModal(false)
+                                                            handleModalTrue()
+                                                        }}
+                                                        className=" md:px-4 hover:bg-stone-200 rounded-lg p-2"
+                                                    >
+                                                        Remove WL!! 😡
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {showCheckModal && (
                                     <Modal
@@ -242,30 +293,7 @@ export default function Header() {
                                         />
                                     </Modal>
                                 )}
-
-                                <div className="lg:flex hidden text-lg space-x-2 xl:space-x-8">
-                                    <button
-                                        onClick={() => {
-                                            setAddWhitelistModal(true)
-                                            handleModalTrue()
-                                        }}
-                                        className=" bg-sky-800 w-48 rounded-lg py-2"
-                                    >
-                                        Add WL!! 🫡
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setAddWhitelistModal(false)
-                                            handleModalTrue()
-                                        }}
-                                        className=" bg-sky-800 w-48 rounded-lg py-2"
-                                    >
-                                        Remove WL!! 😡
-                                    </button>
-                                </div>
                             </div>
-                        ) : (
-                            ""
                         )}
                     </div>
                 ) : (
@@ -285,32 +313,6 @@ export default function Header() {
                 <div className="">
                     <ConnectButton />
                 </div>
-
-                {dropDown && (
-                    <div className="bg-white rounded-md flex -translate-x-[22%] md:-translate-x-[19%] border text-sky-800 flex-col absolute p-2 min-w-[200px]">
-                        <button
-                            onClick={() => {
-                                setDropDown(false)
-                                setAddWhitelistModal(true)
-                                handleModalTrue()
-                            }}
-                            className="hover:bg-stone-200 md:px-4 rounded-lg p-2"
-                        >
-                            Add WL!! 🫡
-                        </button>
-
-                        <button
-                            onClick={() => {
-                                setDropDown(false)
-                                setAddWhitelistModal(false)
-                                handleModalTrue()
-                            }}
-                            className=" md:px-4 hover:bg-stone-200 rounded-lg p-2"
-                        >
-                            Remove WL!! 😡
-                        </button>
-                    </div>
-                )}
             </div>
         </nav>
     )
