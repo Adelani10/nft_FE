@@ -1,7 +1,7 @@
 {
     "11155111": {
-        "Nft": ["0x67837b52083cbf282Be87fe1dC6dDE608B04f40a"],
-        "Whitelist": ["0x0fdb1a2Fc4A58875050fdD16108c9F9aA7a9B481"],
-        "Marketplace": ["0x3dc9ad753Aa8ae6ECb37f9258AA0Bb767BFC4374"]
+        "Nft": ["0x5857d845BaE12824d6dEF43aE4739F9d68160FB9"],
+        "Whitelist": ["0x324909FB6b8F328DDd108FDa4B5EF65223730a8B"],
+        "Marketplace": ["0x116534254c63e27005963715b0eA3D8f62AcE11a"]
     }
 }

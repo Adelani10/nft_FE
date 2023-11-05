@@ -73,7 +73,7 @@ export default function Roadmap() {
                             <p
                                 className={`${
                                     item.show ? "inline-block" : "hidden"
-                                } bg-neutral-700 p-2 rounded-b-xl`}
+                                } bg-gray-600 p-2 rounded-b-xl`}
                             >
                                 {item.paragraph}
                             </p>
