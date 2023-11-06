@@ -25,7 +25,11 @@ export default function MyNfts() {
 
     return (
         <div className="container mx-auto px-6">
-            <div className="">Yayyy</div>
+            {isWeb3Enabled ? (
+                <div className="">Currently in the works</div>
+            ) : (
+                <div>Please connect wallet</div>
+            )}
         </div>
     )
 }

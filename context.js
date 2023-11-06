@@ -54,7 +54,7 @@ function Context({ children }) {
         }
     `
 
-    const { loading, error, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS)
+    const { loading, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS)
 
     const toggleSideBar = () => {
         setSideBar(!sideBar)

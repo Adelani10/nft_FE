@@ -1,11 +1,7 @@
 "use client"
 import { appContext } from "@/context"
 import { useContext } from "react"
-import { Card } from "@web3uikit/core"
 import NftBox from "../components/nftBox"
-// import { useWeb3Contract } from "react-moralis"
-// import { marketplaceAbi } from "@/constants"
-// import { ethers } from "ethers"
 
 export default function Listings() {
     const { loading, listedNfts } = useContext(appContext)

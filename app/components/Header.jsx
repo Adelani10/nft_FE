@@ -45,11 +45,7 @@ export default function Header() {
         },
     })
 
-    const {
-        runContractFunction: removeWhitelist,
-        isFetching: isFetchingRemovingingwhitelist,
-        isLoading: isLoadingRemovingingWhitelist,
-    } = useWeb3Contract({
+    const { runContractFunction: removeWhitelist } = useWeb3Contract({
         abi: whitelistAbi,
         contractAddress: whitelistContractAddress,
         functionName: "addWhitelist",
@@ -58,11 +54,7 @@ export default function Header() {
         },
     })
 
-    const {
-        runContractFunction: isAddressWhitelisted,
-        isFetching: isFetchingIfAddressIsWhitelisted,
-        isLoading: isLoadingIfAddressIsWhitelisted,
-    } = useWeb3Contract({
+    const { runContractFunction: isAddressWhitelisted } = useWeb3Contract({
         abi: whitelistAbi,
         contractAddress: whitelistContractAddress,
         functionName: "isAddressWhitelisted",

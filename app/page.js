@@ -48,11 +48,7 @@ export default function Home() {
         params: {},
     })
 
-    const {
-        runContractFunction: isAddressWhitelisted,
-        isFetching: isFetchingIfAddressIsWhitelisted,
-        isLoading: isLoadingIfAddressIsWhitelisted,
-    } = useWeb3Contract({
+    const { runContractFunction: isAddressWhitelisted } = useWeb3Contract({
         abi: whitelistAbi,
         contractAddress: whitelistContractAddress,
         functionName: "isAddressWhitelisted",
@@ -69,9 +65,7 @@ export default function Home() {
         abi: nftAbi,
         contractAddress: nftContractAddress,
         functionName: "mint",
-        params: {
-            _address: account,
-        },
+        params: {},
         msgValue: isAddyWhitelisted ? "0" : uiPrice,
     })
 
@@ -108,9 +102,9 @@ export default function Home() {
     }
 
     return (
-        <main className="pt-4 px-6">
+        <main className="pt-4 px-6 container mx-auto ">
             {isWeb3Enabled ? (
-                <div className="container mx-auto flex flex-col space-y-8">
+                <div className="flex flex-col space-y-8">
                     <h1 className="sm:text-8xl text-6xl text-center">
                         DU<span className="text-red-700">R</span>KI
                         <span className="text-sky-600">O</span>S

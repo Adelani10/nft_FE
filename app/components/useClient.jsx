@@ -10,3 +10,4 @@ const client = new ApolloClient({
 })
 
 export { MoralisProvider, NotificationProvider, ApolloProvider, client }
+
